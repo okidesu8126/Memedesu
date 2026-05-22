@@ -1,0 +1,302 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>MemeDesu - Meme Creator</title>
+    <link rel="stylesheet" href="./src/styles.css" />
+    <script src="./src/app.js" defer></script>
+  </head>
+  <body>
+    <div class="app-shell">
+      <header class="topbar">
+        <div>
+          <p class="eyebrow">MemeDesu MVP</p>
+          <h1>Meme 快速创作工具</h1>
+        </div>
+        <div class="topbar-actions">
+          <button class="secondary-button" id="undoButton" type="button">撤销</button>
+          <button class="secondary-button" id="redoButton" type="button">重做</button>
+          <button class="secondary-button danger-button" id="clearProjectButton" type="button">清空</button>
+          <button class="secondary-button" id="exportProjectButton" type="button">导出项目</button>
+          <label class="secondary-button file-action">
+            导入项目
+            <input id="projectImportInput" type="file" accept="application/json,.json" />
+          </label>
+          <button class="secondary-button" id="exportJpgButton" type="button">导出 JPG</button>
+          <button class="primary-button" id="exportButton" type="button">导出 PNG</button>
+        </div>
+      </header>
+
+      <section class="panel trend-panel top-discovery" aria-label="热门 Meme 趋势参考">
+        <div class="discovery-hero">
+          <div>
+            <p class="eyebrow">Online Discovery</p>
+            <h2>在线 Meme 模板检索与趋势参考</h2>
+          </div>
+          <p>
+            从多个公开模板站点打开检索入口，找到合适素材后可复制图片链接导入，或下载后导入模板库。
+          </p>
+        </div>
+
+        <div class="panel-heading compact">
+          <h2>检索入口</h2>
+          <span>模板源 + 文案推荐</span>
+        </div>
+
+        <div class="discovery-controls">
+          <label class="field">
+            <span>检索关键词</span>
+            <input id="trendQueryInput" type="text" value="meme templates" />
+          </label>
+
+          <div class="trend-actions">
+            <button class="secondary-button" id="searchTrendButton" type="button">
+              打开趋势检索
+            </button>
+            <a
+              class="source-link"
+              href="https://knowyourmeme.com/"
+              target="_blank"
+              rel="noreferrer"
+            >
+              Know Your Meme
+            </a>
+          </div>
+        </div>
+
+        <div class="platform-tabs" id="platformTabs">
+        </div>
+
+        <section class="inspiration-box" aria-label="灵感框">
+          <div class="subheading">
+            <h3>灵感框</h3>
+            <button class="mini-button" id="refreshInspirationButton" type="button">
+              换一批
+            </button>
+          </div>
+          <div class="inspiration-grid" id="inspirationGrid">
+            <article class="inspiration-card">
+              <div class="inspiration-thumb">POV</div>
+              <strong>POV 反应句式</strong>
+              <span>TikTok / 短视频</span>
+              <p>适合第一视角、剧情化吐槽、产品场景代入。</p>
+            </article>
+            <article class="inspiration-card">
+              <div class="inspiration-thumb">THIS IS FINE</div>
+              <strong>This Is Fine</strong>
+              <span>Reddit / 反应图</span>
+              <p>适合项目失控、社区危机、运营压力。</p>
+            </article>
+          </div>
+        </section>
+
+        <div class="discovery-grid">
+          <section class="trend-block">
+            <div class="subheading">
+              <h3>在线模板源</h3>
+              <span>多渠道检索</span>
+            </div>
+            <div class="source-grid" id="sourceGrid">
+              <article class="source-card featured-source">
+                <strong>Know Your Meme</strong>
+                <span>模板图库 / 梗百科</span>
+                <p>查 Meme 来源、演化和模板图。</p>
+                <div class="source-card-actions">
+                  <a href="https://knowyourmeme.com/photos/templates" target="_blank" rel="noreferrer">打开</a>
+                  <a href="https://knowyourmeme.com/search?q=meme%20templates" target="_blank" rel="noreferrer">搜关键词</a>
+                </div>
+              </article>
+            </div>
+          </section>
+
+          <section class="trend-block">
+            <div class="subheading">
+              <h3>可视化模板</h3>
+              <span>按平台筛选</span>
+            </div>
+            <div class="visual-template-grid" id="visualTemplateGrid">
+            </div>
+          </section>
+
+          <section class="trend-block">
+            <div class="subheading">
+              <h3>文案推荐</h3>
+              <span>一键套用</span>
+            </div>
+            <div class="trend-list" id="trendList">
+              <article class="trend-card">
+                <div class="trend-card-top">
+                  <strong>POV 反应句式</strong>
+                  <span>TikTok · 高</span>
+                </div>
+                <p>POV: 你只是想发一张图，结果它成了整个群的头像</p>
+              </article>
+            </div>
+          </section>
+        </div>
+      </section>
+
+      <main class="workspace">
+        <aside class="panel template-panel" aria-label="模板库">
+          <div class="panel-heading">
+            <h2>模板库</h2>
+            <span>素材 + 空白模板</span>
+          </div>
+
+          <div class="template-filters" id="templateFilters">
+          </div>
+
+          <div class="template-list" id="templateList">
+          </div>
+
+          <div class="template-import">
+            <label class="import-button">
+              导入模板
+              <input id="templateImportInput" type="file" accept="image/*" />
+            </label>
+            <div class="url-import">
+              <input id="templateUrlInput" type="url" placeholder="粘贴图片链接导入" />
+              <button id="importUrlTemplateButton" type="button">导入链接</button>
+            </div>
+            <button class="secondary-button danger-button" id="deleteTemplateButton" type="button">
+              删除当前导入模板
+            </button>
+          </div>
+        </aside>
+
+        <section class="preview-stage" aria-label="Meme 预览">
+          <div class="meme-canvas" id="memeCanvas">
+          </div>
+        </section>
+
+        <aside class="panel editor-panel" aria-label="编辑器">
+          <div class="panel-heading">
+            <h2>编辑工具</h2>
+            <span id="activeTemplateName">双栏对比</span>
+          </div>
+
+          <section class="layer-panel" aria-label="自由文字图层">
+            <div class="panel-heading compact">
+              <h2>自由文字</h2>
+              <span>可拖动</span>
+            </div>
+
+            <button class="secondary-button" id="addTextLayerButton" type="button">
+              添加文字图层
+            </button>
+
+            <div class="text-layer-list" id="textLayerList">
+            </div>
+
+            <label class="field">
+              <span>选中文字</span>
+              <textarea id="layerTextInput" rows="3" placeholder="先添加或点选一个文字图层"></textarea>
+            </label>
+
+            <div class="control-grid">
+              <label class="field">
+                <span>横向位置</span>
+                <input id="layerXInput" type="range" min="0" max="100" value="50" />
+              </label>
+              <label class="field">
+                <span>纵向位置</span>
+                <input id="layerYInput" type="range" min="0" max="100" value="50" />
+              </label>
+            </div>
+
+            <button class="secondary-button danger-button" id="deleteTextLayerButton" type="button">
+              删除选中文字
+            </button>
+
+            <div class="layer-actions">
+              <button class="secondary-button" id="duplicateTextLayerButton" type="button">复制</button>
+              <button class="secondary-button" id="moveLayerUpButton" type="button">上移</button>
+              <button class="secondary-button" id="moveLayerDownButton" type="button">下移</button>
+            </div>
+          </section>
+
+          <section class="sticker-panel" aria-label="贴纸标注">
+            <div class="panel-heading compact">
+              <h2>贴纸标注</h2>
+              <span>快速添加</span>
+            </div>
+
+            <div class="sticker-grid">
+              <button class="sticker-button" type="button" data-sticker="->">箭头</button>
+              <button class="sticker-button" type="button" data-sticker="!!!">强调</button>
+              <button class="sticker-button" type="button" data-sticker="???">疑问</button>
+              <button class="sticker-button" type="button" data-sticker="NEW">NEW</button>
+            </div>
+          </section>
+
+          <section class="tool-panel" aria-label="涂改工具">
+            <div class="panel-heading compact">
+              <h2>涂改工具</h2>
+              <span>橡皮擦</span>
+            </div>
+
+            <div class="tool-tabs">
+              <button class="tool-tab active" id="selectToolButton" type="button">选择</button>
+              <button class="tool-tab" id="eraserToolButton" type="button">橡皮擦</button>
+            </div>
+
+            <label class="field">
+              <span>橡皮擦大小</span>
+              <input id="eraserSizeInput" type="range" min="12" max="90" value="36" />
+            </label>
+
+            <button class="secondary-button danger-button" id="clearEraserButton" type="button">
+              清除涂改
+            </button>
+          </section>
+
+          <section class="style-panel" aria-label="视觉编辑">
+            <div class="panel-heading compact">
+              <h2>视觉编辑</h2>
+              <span>基础样式</span>
+            </div>
+
+            <label class="field">
+              <span>字号</span>
+              <input id="fontSizeInput" type="range" min="20" max="78" value="46" />
+            </label>
+
+            <div class="control-grid">
+              <label class="field">
+                <span>文字颜色</span>
+                <input id="textColorInput" type="color" value="#ffffff" />
+              </label>
+              <label class="field">
+                <span>描边颜色</span>
+                <input id="strokeColorInput" type="color" value="#17201c" />
+              </label>
+            </div>
+
+            <label class="check-field">
+              <input id="strokeToggleInput" type="checkbox" checked />
+              <span>开启文字描边</span>
+            </label>
+
+            <div class="ratio-tabs" id="ratioTabs">
+              <button class="ratio-tab active" type="button" data-ratio="1:1">1:1</button>
+              <button class="ratio-tab" type="button" data-ratio="4:5">4:5</button>
+              <button class="ratio-tab" type="button" data-ratio="16:9">16:9</button>
+            </div>
+          </section>
+
+          <div class="upload-box">
+            <label class="field">
+              <span>上传图片素材</span>
+              <input id="imageInput" type="file" accept="image/*" />
+            </label>
+            <button class="secondary-button" id="clearImageButton" type="button">
+              清除图片
+            </button>
+          </div>
+
+        </aside>
+      </main>
+    </div>
+  </body>
+</html>
